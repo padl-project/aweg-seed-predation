@@ -1,0 +1,14 @@
+attributeName	code	definition
+genus	cocos	
+island	aviation	
+island	eastern	
+island	fern	
+island	home	
+island	little east	
+island	papala	
+island	paradise	
+island	whippoorwill	
+note	washover	
+note	NA	
+treatment	No Rats	
+treatment	Rats	

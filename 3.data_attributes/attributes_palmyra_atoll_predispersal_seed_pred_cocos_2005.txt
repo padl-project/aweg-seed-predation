@@ -1,0 +1,13 @@
+attributeName	attributeDefinition	class	unit	dateTimeFormatString	missingValueCode	missingValueCodeExplanation
+date		Date		!Add datetime specifier here!		
+island		categorical				
+treatment		categorical				
+tree_number		numeric	!Add units here!			
+sample		numeric	!Add units here!			
+seed_number		numeric	!Add units here!			
+seed_class		numeric	!Add units here!			
+fate		numeric	!Add units here!			
+funiculus_code		numeric	!Add units here!			
+funiculus_attacked		numeric	!Add units here!			
+note		categorical				
+genus		categorical				

@@ -53,8 +53,8 @@ files <- drive_ls(as_id(folder_url))
 
 # **CHECK files and UPDATE THE CORRESPONDING NUMBER IN BRACKETS**
 
-drive_download(as_id(files$id[2]),
-               path = paste0("6.raw_data/", files$name[2]),
+drive_download(as_id(files$id[1]),
+               path = paste0("6.raw_data/", files$name[1]),
                overwrite = T)
 
 ```

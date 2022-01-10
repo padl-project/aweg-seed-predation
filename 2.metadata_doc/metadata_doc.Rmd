@@ -1,7 +1,7 @@
 ---
-title: "ADD TILE"
-author: "ADD AUTHOR"
-date: "ADD DATE"
+title: "Cocos and Terminalia Predispersal Seed Predation"
+author: "Alex Wegmann"
+date: "January 07, 2022"
 output: word_document
 ---
 
@@ -27,8 +27,8 @@ The information in this document will be used to create the EML of the data pack
 
 ## 2. Dataset Title
 <!--_Include what, where, and when in the dataset title_-->
- - 
- - 
+ - Cocos predispersal seed predation 2005
+ - Terminalia predispersal seed predation 2005
  
 
 ## 3. Abstract
@@ -40,9 +40,7 @@ _Please provide an abstract specifically of the dataset. This is different from 
 
 
 ## 4. Creators
-_These are the people who will show up as authors in the dataset citation. These are the individuals who have provided intellectual or other significant contributions to the creation of this dataset. **Please add a row with the information of each individual that should be part of the authorship of this dataset.**_
-
-**We highly encourage you to create an ORCID if you don't already have one.** [Find more information here.](https://info.orcid.org/what-is-orcid/)
+_Should anyone else besides you have the role of creator? All creators are part of the citation of the data._
 
 ```{r, creator table, echo = FALSE, message= FALSE, warning= FALSE}
 
@@ -77,12 +75,7 @@ flextable::flextable(creator_table) %>%
 
 ## 5. Other personnel names and roles 
 
-_Who should a data user contact with questions about this data?_
-_There must be at least one person or organization name to serve as the contact for this dataset._
-_You may also list other personnel who participated in the project (such as field crew, lab tech, data entry, etc.) in this table with optional fields, email addresses, organization, and ORCID ID._
-
-
-**We highly encourage you to create an ORCID if you don't already have one.** [Find more information here.](https://info.orcid.org/what-is-orcid/)
+_You are the contact point for this data. But is there anyone else that should be listed under any specific role. These people are mention in the metadata but are not part of the citation._
 
 
 ```{r, personnel table, echo = FALSE, message= FALSE, warning= FALSE}
@@ -117,11 +110,11 @@ _**Please highlight** the license for the release of your data. Click on the lic
 
 [CCO](https://creativecommons.org/publicdomain/zero/1.0/)
 
-**Default**
 
-Public Domain Dedication, aka “No Rights Reserved.” This one means, “If I hold copyright in this, I waive it. And if we’re dealing with a country where we can’t waive copyright, here’s a broad public license with no attribution requirement. And just as a backup, I also promise not to sue you for copyright or related stuff if you use this.”
+Public Domain Dedication, aka “No Rights Reserved.” This one means, “If I hold copyright in this, I waive it."
 
-**Message for user:** Please keep the dataset creators informed of any plans to use the dataset. Consultation with the original investigators is strongly encouraged. Publications and data products that make use of the dataset should include proper acknowledgement.
+
+Consultation with the original investigators is strongly encouraged but not necessary. Publications and data products that make use of the dataset should include proper acknowledgement.
 
 or
 
@@ -129,12 +122,17 @@ or
 
 Attribution is required. CC licenses require that those who reuse a work provide attribution to the work’s creator by retaining “identification of the creator(s) of the Licensed Material and any others designated to receive attribution, in any reasonable manner requested by the Licensor (including by pseudonym if designated).”
 
-**Message for user:** Data user is required to cite it appropriately in any publication that results from its use. The Data User should realize that these data may be actively used by others for ongoing research and that coordination may be necessary to prevent duplicate publication. The Data User is urged to contact the authors of these data if any questions about methodology or results occur. Where appropriate, the Data User is encouraged to consider collaboration or co-authorship with the authors. The Data User should realize that misinterpretation of data may occur if used out of context of the original study. While substantial efforts are made to ensure the accuracy of data and associated documentation, complete accuracy of data sets cannot be guaranteed. All data are made available "as is." The Data User should be aware, however, that data are updated periodically and it is the responsibility of the Data User to check for new versions of the data. The data authors and the repository where these data were obtained shall not be liable for damages resulting from any use or misinterpretation of the data.
+**Message for user:** Data user is required to cite it appropriately in any publication that results from its use. 
+
 
 ## 7. Keywords
 _Using keywords from a controlled vocabulary (CV) will improve your data's future discovery and reuse.  The LTER CV is a good source for keywords. Access the [LTER CV here](https://vocab.lternet.edu/vocab/vocab/index.php).  Also, please determine one or two keywords that best describe your lab, station, and/or project (e.g., Trout Lake Station, NTL LTER).). Add as many rows to this table as needed_
 
 - Palmyra Atoll
+- Seed dispersal
+- Predation
+- Cocos
+- Terminalia
 
 
 
@@ -179,7 +177,7 @@ flextable::flextable(funding_table) %>%
 
 Information <- c("Begin date", "End date", "Is data collection ongoing or completed?")
 
-Description <- c(" ", "", "Completed")
+Description <- c("2005-08-10", "2005-11-02", "Completed")
 
 timeframe_table <- tibble(Information, Description)
 
@@ -310,21 +308,21 @@ path_templates <- here::here("3.data_attributes")
 
 ## Create table with all the file names
 files_names <- tibble(
-  list.files(path_data, pattern = "csv")) %>% 
-  rename(file_name = 1) %>% 
+  list.files(path_data, pattern = "csv")) %>%
+  rename(file_name = 1) %>%
   mutate(file_name = str_remove(file_name, ".csv"),
          attribute_name = paste0("data_attributes", 1:n()),
          position = 1:n())
-
-## Creating the attribute .txt
-
-for (i in files_names$file_name){
-
-  EMLassemblyline::template_table_attributes(
-  path = path_templates,
-  data.path = path_data,
-  data.table = paste0(i, ".csv"))
-}
+# 
+# ## Creating the attribute .txt
+# 
+# for (i in files_names$file_name){
+# 
+#   EMLassemblyline::template_table_attributes(
+#   path = path_templates,
+#   data.path = path_data,
+#   data.table = paste0(i, ".csv"))
+# }
 
 ## reading text into a data frame
 
@@ -377,7 +375,8 @@ EMLassemblyline::template_categorical_variables(
 
 # **UPDATE NAMES**
 
-cat_vars <- read.delim2(here::here(paste0("3.data_attributes/catvars_", file1_name,".txt")))
+
+cat_vars <- read.delim2(here::here(paste0("3.data_attributes/catvars_", files_names$file_name[1],".txt")))
 
 ```
 
@@ -411,67 +410,10 @@ Number of Verticals
 Cell Geometry (e.g. pixel) -->
 
 
-## 15. Scripts/code (software)
-
-_List any software scripts/code you would like to archive along with your data. These may include processing scripts you wrote to create, clean, or analyze the data._
-
-
-```{r, script info, echo = FALSE, message= FALSE, warning= FALSE}
-
-file_name <- " "
-description <- " "
-language <- " "
-
-
-script_info_colnames <- c("Filename", "Description", "Scripting language")
-
-
-script_info <- tibble(file_name, description, language)
-
-colnames(script_info) <- script_info_colnames
-
-```
-
-
-```{r, script info export, echo=FALSE, message= FALSE, warning= FALSE}
-
-flextable::flextable(script_info) %>% 
-  autofit(add_w = 0.2, add_h = 0.1, part = c("body", "header"), unit = "in")
-```
 
 
 
-
-## 16. Other objects (misc.)
-_List any other objects (e.g., .zip, .pdf, etc.) you would like to archive._
-
-**Note:** At the moment, we are not including any photographic data.
-
-
-```{r, other objects, echo = FALSE, message= FALSE, warning= FALSE}
-
-misc_file_name <- " "
-misc_description <- " "
-misc_data_type <- " "
-
-
-other_obj_colnames <- c("Filename", "Description", "Data type")
-
-other_objects <- tibble(misc_file_name, misc_description, misc_data_type)
-
-colnames(other_objects) <- other_obj_colnames
-
-```
-
-
-```{r, other objects export, echo=FALSE, message= FALSE, warning= FALSE}
-
-flextable::flextable(other_objects) %>% 
-  autofit(add_w = 0.2, add_h = 0.1, part = c("body", "header"), unit = "in")
-```
-
-
-## 17. Articles
+## 15. Articles
 _List articles citing this dataset. Add as many rows as necessary_
 
 

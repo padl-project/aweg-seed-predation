@@ -15,6 +15,7 @@ library(here)
 library(tidyverse)
 library(janitor)
 library(readxl)
+library(freeR)
 
 ## Sets R not to use scientific notations
 options(scipen=999) 
@@ -26,9 +27,11 @@ raw_data_path <- here::here("6.raw_data/")
 ## Exploring data
 ```{r}
 
-excel_sheets("6.raw_data/Predispersal_seed_predation.xls")
+excel_sheets(here::here("6.raw_data/Predispersal_seed_predation.xlsx"))
 
 ```
+
+**File has been revised and irrelevant sheets have been removed**
 
 There are 17 sheets in the raw data file. 
 Irrelevant sheets (8):
@@ -54,9 +57,11 @@ Sheets to look into (8)
 ## Read data
 
 ```{r}
-coco_data_raw <- read_excel(here::here("6.raw_data/Predispersal_seed_predation.xls"), sheet = "Cocos_data") %>% 
-  clean_names() %>% 
-  select(1:11) ## all other columns are part of pivot table
+coco_data_raw <- read_excel(here::here("6.raw_data/Predispersal_seed_predation.xlsx"), sheet = "Cocos_data") %>% 
+  clean_names()
+  
+term_data_raw <- read_excel(here::here("6.raw_data/Predispersal_seed_predation.xlsx"), sheet = "Terminalia_data") %>% 
+  clean_names()
 
 ```
 
@@ -69,12 +74,78 @@ coco_data_raw <- read_excel(here::here("6.raw_data/Predispersal_seed_predation.x
 coco_data <- coco_data_raw %>% 
   mutate(island = str_to_lower(island),
          funiculus_attacked = ifelse(funiculus_attacked == "n/a", NA, funiculus_attacked),
-         genus = "cocos") %>% 
-  rename(treatment = treatment_3)
+         funiculus_code = ifelse(funiculus_code == "n/a", NA, funiculus_code),
+         genus = "cocos")
 
+## Check where we have NA's
+freeR::complete(coco_data)
+
+
+## Make sure all values in each column match
+
+unique(coco_data$island)
+unique(coco_data$treatment)
+unique(coco_data$tree_number)
+unique(coco_data$sample)
+unique(coco_data$seed_number)
+unique(coco_data$seed_class)
+unique(coco_data$fate)
+unique(coco_data$funiculus_code)
+unique(coco_data$funiculus_attacked)
+unique(coco_data$note)
+
+
+range(coco_data$date)
 ```
 
 **time range** 2005-08-10 UTC" "2005-11-02 UTC
+
+
+
+2. Terminalia_data
+```{r}
+
+
+term_data <- term_data_raw %>% 
+  mutate(manipulation_code = ifelse(manipulationcode == "n/a", NA, manipulationcode),
+         genus = "terminalia") %>% 
+  select(-manipulationcode)
+
+## Check where we have NA's
+freeR::complete(term_data)
+
+## Make sure all values in each column match
+unique(term_data$tree_number)
+unique(term_data$cluster_number)
+unique(term_data$sample)
+unique(term_data$seed_class)
+unique(term_data$number_of_seeds)
+unique(term_data$number_manipulated)
+unique(term_data$flower_code)
+unique(term_data$manipulation_code)
+
+range(term_data$date)
+```
+
+**time range** 2005-08-11 UTC 2005-10-30 UTC
+
+
+## Save celan data
+```{r}
+
+##Coco
+write_csv(coco_data, here::here("7.clean_data/palmyra_atoll_predispersal_seed_pred_cocos_2005.csv"))
+
+##Terminalia
+write_csv(term_data, here::here("7.clean_data/palmyra_atoll_predispersal_seed_pred_terminalia_2005.csv"))
+
+```
+
+
+
+----------------------------------------------------------------------------
+
+**Exploration of previous file - These sheets were deleted because they are irrelevant**
 
 2. ucsc spss
 
@@ -102,20 +173,6 @@ setdiff(ucsc_spss_raw$fate, coco_data$fate)
 ## Same data! We do not need this sheet
 ```
 
-
-3. Terminalia_data
-```{r}
-
-term_data_raw <- read_excel(here::here("6.raw_data/Predispersal_seed_predation.xls"), sheet = "Terminalia_data") %>% 
-  clean_names()
-
-term_data <- term_data_raw %>% 
-  mutate(manipulation_code = ifelse(manipulationcode == "n/a", NA, manipulationcode),
-         genus = "terminalia") %>% 
-  select(-manipulationcode)
-
-
-```
 
 
 4. Teca_morphology
