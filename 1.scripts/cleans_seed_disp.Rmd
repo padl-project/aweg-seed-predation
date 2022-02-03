@@ -16,11 +16,11 @@ library(tidyverse)
 library(janitor)
 library(readxl)
 library(freeR)
+library(lubridate)
 
 ## Sets R not to use scientific notations
 options(scipen=999) 
 
-raw_data_path <- here::here("6.raw_data/")
 ```
 
 
@@ -75,7 +75,8 @@ coco_data <- coco_data_raw %>%
   mutate(island = str_to_lower(island),
          funiculus_attacked = ifelse(funiculus_attacked == "n/a", NA, funiculus_attacked),
          funiculus_code = ifelse(funiculus_code == "n/a", NA, funiculus_code),
-         genus = "cocos")
+         genus = "cocos",
+         date = date(date))
 
 ## Check where we have NA's
 freeR::complete(coco_data)
@@ -108,7 +109,8 @@ range(coco_data$date)
 
 term_data <- term_data_raw %>% 
   mutate(manipulation_code = ifelse(manipulationcode == "n/a", NA, manipulationcode),
-         genus = "terminalia") %>% 
+         genus = "terminalia",
+         date = date(date)) %>% 
   select(-manipulationcode)
 
 ## Check where we have NA's
